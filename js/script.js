@@ -16,17 +16,20 @@ let currencyRepository = (function() {
         return fetch(apiUrl1).then(function (response) {
           return response.json(); // gets promise
         }).then(function (json) {
-        //   uiFunctions.hideLoadingMessage();
-        let obj = json.rates; // gets data
-        /* loops through object for each currency, creates a new object with key value pairs 
-        and passes the object to a function to add more details and add object to an array */
-        for (const property in obj) {
-            let currency = {
-                name: property,
-                rate: obj[property]
-            };
-            addCurrencyDetails(currency);
-        } 
+          //   uiFunctions.hideLoadingMessage();
+          let obj = json.rates; // gets data
+          /* loops through object for each currency, creates a new object with key value pairs 
+          and passes the object to a function to add more details and add object to an array */
+          const tempArray = [];
+          for (const property in obj) {
+              let currency = {
+                  name: property,
+                  rate: obj[property]
+              };
+              tempArray.push(currency);
+          }
+
+          return Promise.all(tempArray.map(addCurrencyDetails));
         }).catch(function (e) {
           console.error(e);
         });
